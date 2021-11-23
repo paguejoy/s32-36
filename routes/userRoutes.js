@@ -1,9 +1,9 @@
 
 const express = require("express");
 const router = express.Router();
-
+ 
 const userController = require("./../controllers/userControllers");
-
+const auth = require("./../auth");
 
 //check if email exists
 router.get("/email-exists", (req, res) => {
@@ -21,6 +21,21 @@ router.post("/register", (req, res) => {
 router.get("/", (req, res) => {
 
 	userController.getAllUsers().then( result => res.send(result))
+})
+
+
+router.post("/login", (req, res) => {
+
+	userController.login(req.body).then(result => res.send(result))
+})
+
+//retrieve user information
+router.post("/details", auth.verify, (req, res) => {
+	
+	let userData = auth.decode(req.headers.authorization)
+	// console.log(userData)
+
+	userController.getProfile(userData).then(result => res.send(result))
 })
 
 

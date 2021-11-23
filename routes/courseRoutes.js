@@ -3,9 +3,11 @@ const express = require("express");
 const router = express.Router();
 
 const courseController = require("./../controllers/courseControllers")
- 
+
+const auth = require("./../auth");
+  
 //create a course
-router.post("/create-course", (req, res) => {
+router.post("/create-course", auth.verify, (req, res) => {
 	courseController.createCourse(req.body).then(result => res.send(result))
 })
 
@@ -17,12 +19,12 @@ router.get("/", (req, res) => {
 
 
 //retrieving only active courses
-router.get("/active-courses", (req, res) => {
+router.get("/active-courses", auth.verify, (req, res) => {
 	courseController.getActiveCourses().then(result => res.send(result))
 })
 
 //get a specific course using findOne()
-router.get("/specific-course", (req, res) => {
+router.get("/specific-course", auth.verify, (req, res) => {
 
 	// console.log(req.body)	//object
 
@@ -31,7 +33,7 @@ router.get("/specific-course", (req, res) => {
 
 
 //get specific course using findById()
-router.get("/:courseId", (req, res) => {
+router.get("/:courseId", auth.verify, (req, res) => {
 
 	// console.log(req.params)	//{ courseId: '61979f60f63f4531cd77b395' }
 	let paramsId = req.params.courseId
@@ -40,13 +42,13 @@ router.get("/:courseId", (req, res) => {
 
 //update isActive status of the course using findOneAndUpdate()
 	//update isActive status to false
-router.put("/archive", (req, res) => {
+router.put("/archive", auth.verify, (req, res) => {
 
 	courseController.archiveCourse(req.body.courseName).then( result => res.send(result))
 })
 
 	//update isActive status to true
-router.put("/unarchive", (req, res) => {
+router.put("/unarchive", auth.verify, (req, res) => {
 
 	courseController.unarchiveCourse(req.body.courseName).then( result => res.send(result))
 })
@@ -54,26 +56,26 @@ router.put("/unarchive", (req, res) => {
 
 //update isActive status of the course using findByIdAndUpdate()
 	//update isActive status to false
-router.put("/:courseId/archive", (req, res) => {
+router.put("/:courseId/archive", auth.verify, (req, res) => {
 
 	courseController.archiveCourseById(req.params.courseId).then(result => res.send(result))
 })
 
 	//update isActive status to true
-router.put("/:courseId/unarchive", (req, res) => {
+router.put("/:courseId/unarchive", auth.verify, (req, res) => {
 
 	courseController.unarchiveCourseById(req.params.courseId).then( result => res.send(result))
 })
 
 
 //delete course using findOneAndDelete()
-router.delete("/delete-course", (req, res) => {
+router.delete("/delete-course", auth.verify, (req, res) => {
 
 	courseController.deleteCourse(req.body.courseName).then(result => res.send(result))
 })
 
 //delete course using findByIdAndDelete()
-router.delete("/:courseId/delete-course", (req, res) => {
+router.delete("/:courseId/delete-course", auth.verify, (req, res) => {
 
 	courseController.deleteCourseById(req.params.courseId).then(result => res.send(result))
 })

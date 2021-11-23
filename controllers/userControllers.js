@@ -1,6 +1,8 @@
 
 const User = require("./../models/User");
 
+const bcrypt = require("bcrypt");
+const auth = require("./../auth");
 
 module.exports.checkEmail = (reqBody) => {
 	const {email} = reqBody
@@ -27,7 +29,7 @@ module.exports.register = (reqBody) => {
 		firstName: reqBody.firstName,
 		lastName: reqBody.lastName,
 		email: reqBody.email,
-		password: reqBody.password,
+		password: bcrypt.hashSync(reqBody.password, 10),
 		mobileNo: reqBody.mobileNo
 	})
 	//save()
@@ -47,6 +49,43 @@ module.exports.getAllUsers = () => {
 			return result
 		} else {
 			return error
+		}
+	})
+}
+
+
+module.exports.login = (reqBody) => {
+	const {email, password} = reqBody;
+
+	return User.findOne({email: email}).then( (result, error) => {
+
+		if(result == null){
+			return false
+		} else {
+			//what if we found the email and is existing, but the pw is incorrect
+			let isPasswordCorrect = bcrypt.compareSync(password, result.password)
+
+			if(isPasswordCorrect == true){
+				return {access: auth.createAccessToken(result)}
+			} else {
+				return false
+			}
+		}
+	})
+}
+
+module.exports.getProfile = (data) => {
+	// console.log(data)
+	const {id} = data
+
+	return User.findById(id).then((result, err) => {
+		// console.log(result)
+
+		if(result != null){
+			result.password = "";
+			return result
+		} else {
+			return false
 		}
 	})
 }
