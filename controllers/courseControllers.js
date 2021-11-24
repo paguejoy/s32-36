@@ -192,3 +192,23 @@ module.exports.deleteCourseById = (id) => {
 		}
 	})
 }
+
+
+module.exports.editCourse = (id, reqBody) => {
+	const {courseName, description, price} = reqBody
+
+	let updatedCourse = {
+		courseName: courseName,
+		description: description,
+		price: price
+	}
+
+	return Course.findByIdAndUpdate(id, updatedCourse, {new: true}).then( (result, error) => {
+
+			if(error){
+				return error
+			} else {
+				return result
+			}
+	})
+}

@@ -1,11 +1,12 @@
 
 const User = require("./../models/User");
+const Course = require("./../models/Course");
 
 const bcrypt = require("bcrypt");
 const auth = require("./../auth");
 
 module.exports.checkEmail = (reqBody) => {
-	const {email} = reqBody
+	const {email} = reqBody 
 
 	return User.findOne({email: email}).then( (result, error) => {
 		// console.log(email)
@@ -16,7 +17,7 @@ module.exports.checkEmail = (reqBody) => {
 			if(result == null){
 				return true
 			} else {
-				return error
+				return error 
 			}
 		}
 	})
@@ -88,4 +89,46 @@ module.exports.getProfile = (data) => {
 			return false
 		}
 	})
+}
+
+module.exports.enroll = async (data) => {
+	const {userId, courseId} = data
+
+
+	//look for matching document of a user
+	const userEnroll = await User.findById(userId).then( (result, err) => {
+		if(err){
+			return err
+		} else {
+			// console.log(result)
+			result.enrollments.push({courseId: courseId})
+
+			return result.save().then( result => {
+				return true
+			})
+		}
+
+	})
+
+	//look for matching document of a user
+	const courseEnroll = await Course.findById(courseId).then( (result, err) => {
+		if(err){
+			return err
+		} else {
+
+			result.enrollees.push({userId: userId})
+
+			return result.save().then( result => {
+				return true
+			})
+		}
+	})
+
+	//to return only one value for the function enroll
+
+	if(userEnroll && courseEnroll){
+		return true
+	} else {
+		return false
+	}
 }

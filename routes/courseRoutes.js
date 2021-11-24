@@ -81,5 +81,11 @@ router.delete("/:courseId/delete-course", auth.verify, (req, res) => {
 })
 
 
+router.put("/:courseId/edit", auth.verify, (req, res) => {
+
+	courseController.editCourse(req.params.courseId, req.body).then( result => res.send(result))
+})
+
+
 
 module.exports = router;

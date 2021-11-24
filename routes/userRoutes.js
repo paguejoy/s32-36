@@ -5,7 +5,7 @@ const router = express.Router();
 const userController = require("./../controllers/userControllers");
 const auth = require("./../auth");
 
-//check if email exists
+//check if email exists 
 router.get("/email-exists", (req, res) => {
 
 	userController.checkEmail(req.body).then( result => res.send(result))
@@ -37,6 +37,19 @@ router.post("/details", auth.verify, (req, res) => {
 
 	userController.getProfile(userData).then(result => res.send(result))
 })
+
+//enrollments
+router.post("/enroll", auth.verify, (req, res) => {
+
+	let data = {
+		userId: auth.decode(req.headers.authorization).id,
+		courseId: req.body.courseId
+	}
+
+	userController.enroll(data).then(result => res.send(result))
+})
+
+
 
 
 module.exports = router;
