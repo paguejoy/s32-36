@@ -132,3 +132,44 @@ module.exports.enroll = async (data) => {
 		return false
 	}
 }
+
+module.exports.newEnroll = (data) => {
+	const {userId, courseId} = data
+	// console.log(courseId)
+
+	return User.findById(userId).then( (result, err) => {
+
+			// console.log(`user document:`,result)
+		result.enrollments.push({courseId: courseId})
+
+		if(result){
+			console.log(result.enrollments.length)
+
+			if(result.enrollments.length != 0){
+
+				return result.enrollments.find( element => {
+
+					console.log(element)
+					// console.log(courseId)
+					console.log(element.courseId)
+					// console.log(element.courseId == courseId)
+
+
+					if(element.courseId == courseId){
+						console.log("if code block")
+						return false
+					} else {
+						console.log("else code block")
+						return result.save().then(result => {
+							return true
+						})
+					}
+				})
+			}
+
+
+		} else {
+			return error
+		}
+	})
+}

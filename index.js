@@ -3,7 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
 const PORT = process.env.PORT || 4000;
-
+const cors = require("cors");
 
 /*import routes module*/
 const courseRoutes = require("./routes/courseRoutes");
@@ -19,6 +19,7 @@ db.once('open', () => console.log(`Connected to Database`));
 /*Middlewares*/
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
+app.use(cors())
 
 
 /*Routes*/
