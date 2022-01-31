@@ -93,7 +93,7 @@ module.exports.getProfile = (data) => {
 }
 
 
-module.exports.editProfile = (userId, reqBody) => {
+module.exports.editDetails = (userId, reqBody) => {
 	// console.log(userId)
 	// console.log(reqBody)
 	const {firstName, lastName, email, password, mobileNo, age} = reqBody
@@ -117,6 +117,30 @@ module.exports.editProfile = (userId, reqBody) => {
 	})
 }
 
+
+module.exports.editProfile = (userId, reqBody) => {
+	// console.log(userId)
+	// console.log(reqBody)
+	const {firstName, lastName, email, password, mobileNo, age} = reqBody
+
+	const updateUser = {
+		firstName: firstName,
+		lastName: lastName,
+		email: email,
+		password: password,
+		mobileNo: mobileNo,
+		age: age
+	}
+
+	return User.findByIdAndUpdate(userId, updateUser, {new: true}).then((result, error) => {
+		// console.log(result)
+		if(error){
+			return error
+		} else {
+			return result
+		}
+	})
+}
 
 
 

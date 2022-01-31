@@ -39,9 +39,17 @@ router.get("/details", auth.verify, (req, res) => {
 })
 
 
-//edit user information
-router.put('/:userId/edit', (req, res) => {
-	userController.editProfile(req.params.userId, req.body).then(result => res.send(result))
+//edit user information using ID via params
+router.put('/:userId/edit', auth.verify, (req, res) => {
+	userController.editDetails(req.params.userId, req.body).then(result => res.send(result))
+})
+
+
+//edit user information using ID via token
+router.put('/edit', auth.verify, (req, res) => {
+	let userId = auth.decode(req.headers.authorization).id
+
+	userController.editProfile(userId, req.body).then(result => res.send(result))
 })
 
 //enrollments
