@@ -41,6 +41,8 @@ router.get("/details", auth.verify, (req, res) => {
 
 //edit user information using ID via params
 router.put('/:userId/edit', auth.verify, (req, res) => {
+	// console.log(req.params.userId)
+	// console.log(req.body)
 	userController.editDetails(req.params.userId, req.body).then(result => res.send(result))
 })
 
@@ -48,6 +50,7 @@ router.put('/:userId/edit', auth.verify, (req, res) => {
 //edit user information using ID via token
 router.put('/edit', auth.verify, (req, res) => {
 	let userId = auth.decode(req.headers.authorization).id
+	// console.log(userId)
 
 	userController.editProfile(userId, req.body).then(result => res.send(result))
 })

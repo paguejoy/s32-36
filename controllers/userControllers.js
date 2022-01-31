@@ -94,17 +94,15 @@ module.exports.getProfile = (data) => {
 
 
 module.exports.editDetails = (userId, reqBody) => {
-	// console.log(userId)
-	// console.log(reqBody)
-	const {firstName, lastName, email, password, mobileNo, age} = reqBody
+	
+	const {firstName, lastName, email, password, mobileNo} = reqBody
 
 	const updateUser = {
 		firstName: firstName,
 		lastName: lastName,
 		email: email,
 		password: password,
-		mobileNo: mobileNo,
-		age: age
+		mobileNo: mobileNo
 	}
 
 	return User.findByIdAndUpdate(userId, updateUser, {new: true}).then((result, error) => {
