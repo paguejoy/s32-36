@@ -11,7 +11,7 @@ module.exports.checkEmail = (reqBody) => {
 	return User.findOne({email: email}).then( (result, error) => {
 		// console.log(email)
 		if(result != null){
-			return `Email already exists`
+			return false
 		} else {
 			console.log(result)	//null bec email does not exist
 			if(result == null){
@@ -61,6 +61,7 @@ module.exports.login = (reqBody) => {
 	return User.findOne({email: email}).then( (result, error) => {
 
 		if(result == null){
+			console.log('email null')
 			return false
 		} else {
 			//what if we found the email and is existing, but the pw is incorrect
@@ -90,6 +91,34 @@ module.exports.getProfile = (data) => {
 		}
 	})
 }
+
+
+module.exports.editProfile = (userId, reqBody) => {
+	// console.log(userId)
+	// console.log(reqBody)
+	const {firstName, lastName, email, password, mobileNo, age} = reqBody
+
+	const updateUser = {
+		firstName: firstName,
+		lastName: lastName,
+		email: email,
+		password: password,
+		mobileNo: mobileNo,
+		age: age
+	}
+
+	return User.findByIdAndUpdate(userId, updateUser, {new: true}).then((result, error) => {
+		// console.log(result)
+		if(error){
+			return error
+		} else {
+			return result
+		}
+	})
+}
+
+
+
 
 module.exports.enroll = async (data) => {
 	const {userId, courseId} = data
